@@ -2,7 +2,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class Dish {
-    private int id;
+    private static int id;
     private String name;
     private DishTypeEnum dishType;
     private List<Ingredient> ingredients;
@@ -14,7 +14,16 @@ public class Dish {
         this.ingredients = ingredients;
     }
 
-    public int getId() {
+    public Dish(int id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
+    public void setIngredients(List<Ingredient> ingredients) {
+        this.ingredients = ingredients;
+    }
+
+    public static int getId() {
         return id;
     }
 
@@ -58,5 +67,9 @@ public class Dish {
             total += ingredient.getPrice();
         }
         return total;
+    }
+
+    public void setId(int anInt) {
+        this.id = id;
     }
 }

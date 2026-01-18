@@ -15,6 +15,11 @@ public class Ingredient {
         this.dish = dish;
     }
 
+    public Ingredient(int id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     public int getId() {
         return id;
     }
@@ -60,5 +65,9 @@ public class Ingredient {
 
     public String getDishName() {
         return dish.getName();
+    }
+
+    public void setId(int anInt) {
+        this.id = id;
     }
 }
