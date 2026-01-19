@@ -15,13 +15,24 @@ public class Dish {
         this.ingredients = ingredients;
     }
 
-    public double getDishPrice() {
+    public Double getDishCost() {
+
         double total = 0;
-        for (Ingredient i : ingredients) {
-            total += i.getPrice();
+
+        for (Ingredient ing : ingredients) {
+
+            if (ing.getRequiredQuantity() == null) {
+                throw new RuntimeException(
+                        "Quantité inconnue pour l’ingrédient : " + ing.getName()
+                );
+            }
+
+            total += ing.getPrice() * ing.getRequiredQuantity();
         }
+
         return total;
     }
+
 
     public String getName() {
         return this.name;

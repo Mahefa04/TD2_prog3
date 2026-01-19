@@ -49,6 +49,7 @@ public class DataRetriever {
                     rs.getString("name"),
                     rs.getDouble("price"),
                     CategoryEnum.valueOf(rs.getString("category")),
+                    rs.getObject("required_quantity", Double.class),
                     null
             ));
         }
@@ -75,6 +76,7 @@ public class DataRetriever {
                     rs.getString("name"),
                     rs.getDouble("price"),
                     CategoryEnum.valueOf(rs.getString("category")),
+                    rs.getObject("required_quantity", Double.class),
                     null
             ));
         }
@@ -106,8 +108,8 @@ public class DataRetriever {
                 // insertion si tous est ok
             for (Ingredient ing : newIngredients) {
                 String insertSql = """
-                        INSERT INTO ingredient(name, price, category)
-                        VALUES (?, ?, ?::ingredient_category)
+                        INSERT INTO ingredient(name, price, category, required_quantity)
+                        VALUES (?, ?, ?::ingredient_category, ?)
                         """;
                 PreparedStatement insertPs = connection.prepareStatement(insertSql);
                 insertPs.setString(1, ing.getName());
@@ -277,6 +279,7 @@ public class DataRetriever {
                     rs.getString("name"),
                     rs.getDouble("price"),
                     CategoryEnum.valueOf(rs.getString("category")),
+                    rs.getObject("required_quantity", Double.class),
                     null
             ));
         }

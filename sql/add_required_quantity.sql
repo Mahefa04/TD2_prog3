@@ -1,15 +1,11 @@
-ALTER TABLE ingredients
-ADD COLUMN IF NOT EXISTS required_quantity DECIMAL(5,2) NULL;
+ALTER TABLE ingredient
+ADD COLUMN required_quantity DOUBLE PRECISION;
 
-UPDATE ingredients
-SET required_quantity =
-    CASE name
-        WHEN 'Laitue'   THEN 1
-        WHEN 'Tomate'   THEN 2
-        WHEN 'Poulet'   THEN 0.5
-        WHEN 'Chocolat' THEN NULL
-        WHEN 'Beurre'   THEN NULL
-        ELSE required_quantity
-    END;
+UPDATE ingredient SET required_quantity = 1 WHERE name = 'Laitue';
+UPDATE ingredient SET required_quantity = 2 WHERE name = 'Tomate';
+UPDATE ingredient SET required_quantity = 0.5 WHERE name = 'Poulet';
+
+UPDATE ingredient SET required_quantity = NULL WHERE name = 'Chocolat';
+UPDATE ingredient SET required_quantity = NULL WHERE name = 'Beurre';
 
 
