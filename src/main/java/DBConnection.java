@@ -1,20 +1,28 @@
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 
 public class DBConnection {
-    private static final String DB_URL = System.getenv("DB_URL");
-    private static final String DB_USER = System.getenv("DB_USER");
-    private static final String DB_PASSWORD = System.getenv("DB_PASSWORD");
 
-    public static Connection getDBConnection() {
-        if (DB_URL == null || DB_USER == null || DB_PASSWORD == null) {
-            throw new RuntimeException("lack of variableEnvironment : " +
-                    "DB_URL, DB_USER AND DB_PASSWORD");
-        }
+    public static Connection getConnection() {
         try {
-            return DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+            String url = System.getenv("JDBC_URL");
+            String user = System.getenv("USERNAME");
+            String pwd = System.getenv("PASSWORD");
+
+            Connection connection = DriverManager.getConnection(url, user, pwd);
+
+            // 🔥 FORCER L’ENCODAGE CÔTÉ CLIENT JDBC
+            try (Statement st = connection.createStatement()) {
+                st.execute("SET client_encoding = 'UTF8'");
+            }
+
+
+            return connection;
+
         } catch (Exception e) {
-            throw new RuntimeException("Cannot connect to database", e);
+            throw new RuntimeException("Connexion échouée", e);
         }
     }
 }

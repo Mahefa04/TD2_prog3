@@ -1,3 +1,3 @@
 public enum CategoryEnum {
-    vegetable, animal, marine, dairy, other
+    VEGETABLE, ANIMAL, MARINE, DAIRY, OTHER
 }

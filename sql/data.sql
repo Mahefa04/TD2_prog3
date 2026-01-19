@@ -1,13 +1,13 @@
-insert into Dish (id, name, dish_type) values
-(1, 'Salade fraiche', 'start'),
-(2, 'poulet grillé', 'main'),
-(3, 'riz aux légumes', 'main'),
-(4, 'gateau au chocolat', 'dessert'),
-(5, 'saladede fruits', 'dessert');
+INSERT INTO dish (name, dish_type) VALUES
+('Salade fraîche', 'START'),
+('Poulet grillé', 'MAIN'),
+('Riz aux légumes', 'MAIN'),
+('Gateau au chocolat', 'DESSERT'),
+('Salade de fruits', 'DESSERT');
 
-insert into Ingredient (id, name, price, category, id_dish) values
-(1, 'laitue', 800.00, 'vegetable', 1),
-(2, 'tomate', 600.00, 'vegetable', 1),
-(3, 'poulet', 4500.00, 'animal', 2),
-(4, 'chocolat', 3000.00, 'other', 4),
-(5, 'beurre', 2500.00, 'dairy', 4);
+INSERT INTO ingredient (name, price, category, id_dish) VALUES
+('Laitue', 800, 'VEGETABLE', 1),
+('Tomate', 600, 'VEGETABLE', 1),
+('Poulet', 4500, 'ANIMAL', 2),
+('Chocolat', 3000, 'OTHER', 4),
+('Beurre', 2500, 'DAIRY', 4);

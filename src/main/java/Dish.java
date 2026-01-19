@@ -1,8 +1,9 @@
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 public class Dish {
-    private static int id;
+    private int id;
     private String name;
     private DishTypeEnum dishType;
     private List<Ingredient> ingredients;
@@ -14,62 +15,45 @@ public class Dish {
         this.ingredients = ingredients;
     }
 
-    public Dish(int id, String name) {
-        this.id = id;
-        this.name = name;
-    }
-
-    public void setIngredients(List<Ingredient> ingredients) {
-        this.ingredients = ingredients;
-    }
-
-    public static int getId() {
-        return id;
+    public double getDishPrice() {
+        double total = 0;
+        for (Ingredient i : ingredients) {
+            total += i.getPrice();
+        }
+        return total;
     }
 
     public String getName() {
-        return name;
-    }
-
-    public DishTypeEnum getDishType() {
-        return dishType;
+        return this.name;
     }
 
     public List<Ingredient> getIngredients() {
         return ingredients;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        Dish dish = (Dish) o;
-        return id == dish.id && Objects.equals(name, dish.name) && dishType == dish.dishType && Objects.equals(ingredients, dish.ingredients);
+    public int getId() {
+        return id;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, dishType, ingredients);
+    public DishTypeEnum getDishType() {
+        return dishType;
     }
 
-    @Override
-    public String toString() {
-        return "Dish{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", dishType=" + dishType +
-                ", ingredients=" + ingredients +
-                '}';
-    }
-
-    public Double getDishPrice () {
-        double total = 0;
-        for (Ingredient ingredient : ingredients) {
-            total += ingredient.getPrice();
-        }
-        return total;
-    }
-
-    public void setId(int anInt) {
+    public void setId(int id) {
         this.id = id;
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDishType(DishTypeEnum dishType) {
+        this.dishType = dishType;
+    }
+
+    public void setIngredients(List<Ingredient> ingredients) {
+        this.ingredients = ingredients;
+    }
+
+    // getters & setters
 }

@@ -1,13 +1,13 @@
-import java.util.Objects;
+import java.net.ProtocolFamily;
 
 public class Ingredient {
     private int id;
     private String name;
-    private Double price;
+    private double price;
     private CategoryEnum category;
     private Dish dish;
 
-    public Ingredient(int id, String name, Double price, CategoryEnum category, Dish dish) {
+    public Ingredient(int id, String name, double price, CategoryEnum category, Dish dish) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -15,21 +15,20 @@ public class Ingredient {
         this.dish = dish;
     }
 
-    public Ingredient(int id, String name) {
-        this.id = id;
-        this.name = name;
+    public String getDishName() {
+        return dish != null ? dish.getName() : null;
     }
 
-    public int getId() {
-        return id;
+    public double getPrice() {
+        return price;
     }
 
     public String getName() {
         return name;
     }
 
-    public Double getPrice() {
-        return price;
+    public int getId() {
+        return id;
     }
 
     public CategoryEnum getCategory() {
@@ -40,34 +39,23 @@ public class Ingredient {
         return dish;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        Ingredient that = (Ingredient) o;
-        return id == that.id && Objects.equals(name, that.name) && Objects.equals(price, that.price) && category == that.category && Objects.equals(dish, that.dish);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, price, category, dish);
-    }
-
-    @Override
-    public String toString() {
-        return "Ingredient{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", price=" + price +
-                ", category=" + category +
-                ", dish=" + dish +
-                '}';
-    }
-
-    public String getDishName() {
-        return dish.getName();
-    }
-
-    public void setId(int anInt) {
+    public void setId(int id) {
         this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public void setCategory(CategoryEnum category) {
+        this.category = category;
+    }
+
+    public void setDish(Dish dish) {
+        this.dish = dish;
     }
 }

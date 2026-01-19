@@ -1,6 +1,8 @@
-Create database mini_dish_db;
-\c mini_dish_db
+-- 1. Création de la base
+CREATE DATABASE mini_dish_db;
 
-create user mini_dish_db_manager with password '123456';
+-- 2. Création de l'utilisateur
+CREATE USER mini_dish_db_manager WITH PASSWORD 'password';
 
-grant all privileges on database mini_dish_db to mini_dish_db_manager;
+-- 3. Droits
+GRANT ALL PRIVILEGES ON DATABASE mini_dish_db TO mini_dish_db_manager;

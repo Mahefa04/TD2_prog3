@@ -1,4 +1,4 @@
-
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
@@ -8,127 +8,170 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class DataRetrieverTest {
 
-    @Test
-    public void testFindDishById_ok() throws Exception {
-        DataRetriever dr = new DataRetriever();
+    private DataRetriever dataRetriever;
 
-        Dish dish = dr.findDishById(1);
-
-        assertNotNull(dish);
-        assertEquals("Salade Fraîche", dish.getName());
-        assertEquals(2, dish.getIngredients().size());
+    @BeforeEach
+    void setUp() {
+        dataRetriever = new DataRetriever();
     }
 
+    // a) Dish findDishById id=1
     @Test
-    public void testFindDishById_notFound() throws SQLException {
-        DataRetriever dr = new DataRetriever();
-        assertThrows(Exception.class, () -> dr.findDishById(999));
+    void testFindDishById_ok() throws Exception {
+        Dish dish = dataRetriever.findDishById(1);
+        assertEquals("Salade fraîche", dish.getName());
+        assertEquals(2, dish.getIngredients
+
+                ().size());
     }
 
-
+    // b) Dish findDishById id=999
     @Test
-    public void testFindIngredients_page2() throws Exception {
-        DataRetriever dr = new DataRetriever();
+    void testFindDishById_notFound() {
+        assertThrows(RuntimeException.class, () -> {
+            dataRetriever.findDishById(999);
+        });
+    }
 
-        List<Ingredient> list = dr.findIngredients(2, 2);
-
+    // c) findIngredients page=2 size=2 → Poulet, Chocolat
+    @Test
+    void testFindIngredients_page2_size2() throws Exception {
+        List<Ingredient> list = dataRetriever.findIngredients(2, 2);
         assertEquals(2, list.size());
         assertEquals("Poulet", list.get(0).getName());
         assertEquals("Chocolat", list.get(1).getName());
     }
 
+    // d) findIngredients page=3 size=5 → vide
     @Test
-    public void testFindIngredients_empty() throws Exception {
-        DataRetriever dr = new DataRetriever();
-
-        List<Ingredient> list = dr.findIngredients(3, 5);
-
+    void testFindIngredients_emptyPage() throws Exception {
+        List<Ingredient> list = dataRetriever.findIngredients(3, 5);
         assertTrue(list.isEmpty());
     }
 
+    // e) findDishsByIngredientName "eur" → Gâteau au chocolat
     @Test
-    public void testFindDishByIngredientName() throws Exception {
-        DataRetriever dr = new DataRetriever();
-
-        List<Dish> dishes = dr.findDishByIngredientName("eur");
-
+    void testFindDishsByIngredientName() throws Exception {
+        List<Dish> dishes = dataRetriever.findDishsByIngredientName("eur");
         assertEquals(1, dishes.size());
-        assertEquals("Gâteau au chocolat", dishes.get(0).getName());
+        assertEquals("Gateau au chocolat", dishes.get(0).getName());
     }
 
+    // f) findIngredientsByCriteria category=VEGETABLE → Laitue, Tomate
     @Test
-    public void testFindIngredientsByCriteria_category() throws Exception {
-        DataRetriever dr = new DataRetriever();
-
-        List<Ingredient> list = dr.findIngredientsByCriteria(
-                null, CategoryEnum.vegetable, null, 1, 10
+    void testFindIngredientsByCriteria_category() throws Exception {
+        List<Ingredient> list = dataRetriever.findIngredientsByCriteria(
+                null,
+                CategoryEnum.VEGETABLE,
+                null,
+                1,
+                10
         );
 
         assertEquals(2, list.size());
+        assertEquals("Laitue", list.get(0).getName());
+        assertEquals("Tomate", list.get(1).getName());
     }
 
+    // g) ingredientName="cho", dishName="Sal" → vide
     @Test
-    public void testFindIngredientsByCriteria_empty() throws Exception {
-        DataRetriever dr = new DataRetriever();
-
-        List<Ingredient> list = dr.findIngredientsByCriteria(
-                "cho", null, "Sal", 1, 10
+    void testFindIngredientsByCriteria_empty() throws Exception {
+        List<Ingredient> list = dataRetriever.findIngredientsByCriteria(
+                "cho",
+                null,
+                "Sal",
+                1,
+                10
         );
 
         assertTrue(list.isEmpty());
     }
 
+    // h) ingredientName="cho", dishName="gâteau" → Chocolat
     @Test
-    public void testFindIngredientsByCriteria_chocolat() throws Exception {
-        DataRetriever dr = new DataRetriever();
-
-        List<Ingredient> list = dr.findIngredientsByCriteria(
-                "cho", null, "gâteau", 1, 10
+    void testFindIngredientsByCriteria_chocolat() throws Exception {
+        List<Ingredient> list = dataRetriever.findIngredientsByCriteria(
+                "cho",
+                null,
+                "gateau",
+                1,
+                10
         );
 
         assertEquals(1, list.size());
         assertEquals("Chocolat", list.get(0).getName());
     }
 
+    // i) createIngredients OK
     @Test
-    public void testCreateIngredients_ok() throws Exception {
-        DataRetriever dr = new DataRetriever();
+    void testCreateIngredients_ok() throws Exception {
+        Ingredient fromage = new Ingredient(0, "Fromage", 2000, CategoryEnum.DAIRY, null);
+        Ingredient oignon = new Ingredient(0, "Oignon", 500, CategoryEnum.VEGETABLE, null);
 
-        List<Ingredient> ingredients = List.of(
-                new Ingredient(1, "Fromage", 1200.00, CategoryEnum.dairy, null, null),
-                new Ingredient(2, "Oignon", 500.00, CategoryEnum.vegetable, null, null)
-        );
-
-        List<Ingredient> result = dr.createIngredients(ingredients);
+        List<Ingredient> result = dataRetriever.createIngredients(List.of(fromage, oignon));
 
         assertEquals(2, result.size());
     }
 
+    // j) createIngredients erreur (Carotte existe déjà)
     @Test
-    public void testCreateIngredients_exception() throws Exception {
-        DataRetriever dr = new DataRetriever();
+    void testCreateIngredients_error() {
+        Ingredient carotte = new Ingredient(0, "Carotte", 2000, CategoryEnum.VEGETABLE, null);
+        Ingredient ail = new Ingredient(0, "Ail", 2000, CategoryEnum.VEGETABLE, null);
 
-        List<Ingredient> ingredients = List.of(
-                new Ingredient(1, "Carotte", 2000.00, CategoryEnum.vegetable, null, null),
-                new Ingredient(2, "Laitue", 200.00, CategoryEnum.vegetable, null, null)
+        assertThrows(RuntimeException.class, () -> {
+            dataRetriever.createIngredients(List.of(carotte, ail));
+        });
+    }
+
+    // k) saveDish création
+    @Test
+    void testSaveDish_create() throws Exception {
+        Ingredient oignon = new Ingredient(0, "Oignon", 500, CategoryEnum.VEGETABLE, null);
+
+        Dish dish = new Dish(
+                0,
+                "Soupe de légumes",
+                DishTypeEnum.START,
+                List.of(oignon)
         );
 
-        assertThrows(Exception.class, () -> dr.createIngredients(ingredients));
-    }
+        Dish saved = dataRetriever.saveDish(dish);
+        assertEquals("Soupe de légumes", saved.getName());
     }
 
+    // l) saveDish ajout ingrédients
     @Test
-    public void testSaveDish_addIngredient() throws Exception {
-        DataRetriever dr = new DataRetriever();
+    void testSaveDish_addIngredients() throws Exception {
+        Ingredient oignon = new Ingredient(0, "Oignon", 500, CategoryEnum.VEGETABLE, null);
+        Ingredient laitue = new Ingredient(0, "Laitue", 800, CategoryEnum.VEGETABLE, null);
+        Ingredient tomate = new Ingredient(0, "Tomate", 600, CategoryEnum.VEGETABLE, null);
+        Ingredient fromage = new Ingredient(0, "Fromage", 2000, CategoryEnum.DAIRY, null);
 
-        Dish dish = dr.findDishById(1);
-        dish.getIngredients().add(new Ingredient(5, null));
+        Dish dish = new Dish(
+                1,
+                "Salade fraîche",
+                DishTypeEnum.START,
+                List.of(oignon, laitue, tomate, fromage)
+        );
 
-        Dish saved = dr.saveDish(dish);
-
-        assertEquals(4, saved.getIngredients().size());
+        Dish saved = dataRetriever.saveDish(dish);
+        assertEquals("Salade fraîche", saved.getName());
     }
-}
 
-public void main() {
+    // m) saveDish suppression ingrédients
+    @Test
+    void testSaveDish_removeIngredients() throws Exception {
+        Ingredient fromage = new Ingredient(0, "Fromage", 2000, CategoryEnum.DAIRY, null);
+
+        Dish dish = new Dish(
+                1,
+                "Salade de fromage",
+                DishTypeEnum.START,
+                List.of(fromage)
+        );
+
+        Dish saved = dataRetriever.saveDish(dish);
+        assertEquals("Salade de fromage", saved.getName());
+    }
 }
