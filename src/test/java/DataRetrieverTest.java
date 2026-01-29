@@ -1,7 +1,6 @@
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -105,8 +104,8 @@ public class DataRetrieverTest {
     // i) createIngredients OK
     @Test
     void testCreateIngredients_ok() throws Exception {
-        Ingredient fromage = new Ingredient(0, "Fromage", 2000, CategoryEnum.DAIRY, null);
-        Ingredient oignon = new Ingredient(0, "Oignon", 500, CategoryEnum.VEGETABLE, null);
+        Ingredient fromage = new Ingredient(0, "Fromage", 2000, CategoryEnum.DAIRY, null, null);
+        Ingredient oignon = new Ingredient(0, "Oignon", 500, CategoryEnum.VEGETABLE, null, null);
 
         List<Ingredient> result = dataRetriever.createIngredients(List.of(fromage, oignon));
 
@@ -116,8 +115,8 @@ public class DataRetrieverTest {
     // j) createIngredients erreur (Carotte existe déjà)
     @Test
     void testCreateIngredients_error() {
-        Ingredient carotte = new Ingredient(0, "Carotte", 2000, CategoryEnum.VEGETABLE, null);
-        Ingredient ail = new Ingredient(0, "Ail", 2000, CategoryEnum.VEGETABLE, null);
+        Ingredient carotte = new Ingredient(0, "Carotte", 2000, CategoryEnum.VEGETABLE, null, null);
+        Ingredient ail = new Ingredient(0, "Ail", 2000, CategoryEnum.VEGETABLE, null, null);
 
         assertThrows(RuntimeException.class, () -> {
             dataRetriever.createIngredients(List.of(carotte, ail));
@@ -127,7 +126,7 @@ public class DataRetrieverTest {
     // k) saveDish création
     @Test
     void testSaveDish_create() throws Exception {
-        Ingredient oignon = new Ingredient(0, "Oignon", 500, CategoryEnum.VEGETABLE, null);
+        Ingredient oignon = new Ingredient(0, "Oignon", 500, CategoryEnum.VEGETABLE, null, null);
 
         Dish dish = new Dish(
                 0,
@@ -143,10 +142,10 @@ public class DataRetrieverTest {
     // l) saveDish ajout ingrédients
     @Test
     void testSaveDish_addIngredients() throws Exception {
-        Ingredient oignon = new Ingredient(0, "Oignon", 500, CategoryEnum.VEGETABLE, null);
-        Ingredient laitue = new Ingredient(0, "Laitue", 800, CategoryEnum.VEGETABLE, null);
-        Ingredient tomate = new Ingredient(0, "Tomate", 600, CategoryEnum.VEGETABLE, null);
-        Ingredient fromage = new Ingredient(0, "Fromage", 2000, CategoryEnum.DAIRY, null);
+        Ingredient oignon = new Ingredient(0, "Oignon", 500, CategoryEnum.VEGETABLE, null, null);
+        Ingredient laitue = new Ingredient(0, "Laitue", 800, CategoryEnum.VEGETABLE, null, null);
+        Ingredient tomate = new Ingredient(0, "Tomate", 600, CategoryEnum.VEGETABLE, null, null);
+        Ingredient fromage = new Ingredient(0, "Fromage", 2000, CategoryEnum.DAIRY, null, null);
 
         Dish dish = new Dish(
                 1,
@@ -162,7 +161,7 @@ public class DataRetrieverTest {
     // m) saveDish suppression ingrédients
     @Test
     void testSaveDish_removeIngredients() throws Exception {
-        Ingredient fromage = new Ingredient(0, "Fromage", 2000, CategoryEnum.DAIRY, null);
+        Ingredient fromage = new Ingredient(0, "Fromage", 2000, CategoryEnum.DAIRY, null, null);
 
         Dish dish = new Dish(
                 1,
