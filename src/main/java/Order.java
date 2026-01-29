@@ -6,10 +6,28 @@ public class Order {
     private Integer id;
     private String reference;
     private Instant creationDatetime;
+    private PaymentStatusEnum paymentStatus;
+    private Sale sale;
     private List<DishOrder> dishOrderList;
 
     public Integer getId() {
         return id;
+    }
+
+    public PaymentStatusEnum getPaymentStatus() {
+        return paymentStatus;
+    }
+
+    public Sale getSale() {
+        return sale;
+    }
+
+    public void setPaymentStatus(PaymentStatusEnum paymentStatus) {
+        this.paymentStatus = paymentStatus;
+    }
+
+    public void setSale(Sale sale) {
+        this.sale = sale;
     }
 
     public void setId(Integer id) {

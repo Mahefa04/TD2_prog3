@@ -119,6 +119,74 @@ public class DataRetriever {
         }
     }
 
+    public Sale createSaleFrom(Order order) {
+
+        if (order == null) {
+            throw new RuntimeException("Commande inexistante");
+        }
+
+        if (order.getPaymentStatus() != PaymentStatusEnum.PAID) {
+            throw new RuntimeException(
+                    "Une vente ne peut être créée que pour une commande PAYÉE"
+            );
+        }
+
+        if (order.getSale() != null) {
+            throw new RuntimeException(
+                    "Cette commande est déjà associée à une vente"
+            );
+        }
+
+        try (Connection conn = new DBConnection().getConnection()) {
+            conn.setAutoCommit(false);
+
+            Instant now = Instant.now();
+
+            // 1️⃣ Créer la vente
+            String insertSaleSql = """
+            INSERT INTO sale(creation_datetime)
+            VALUES (?)
+            RETURNING id
+        """;
+
+            int saleId;
+            try (PreparedStatement ps = conn.prepareStatement(insertSaleSql)) {
+                ps.setTimestamp(1, Timestamp.from(now));
+                ResultSet rs = ps.executeQuery();
+                rs.next();
+                saleId = rs.getInt(1);
+            }
+
+            // 2️⃣ Lier la commande à la vente
+            String updateOrderSql = """
+            UPDATE "order"
+            SET id_sale = ?
+            WHERE id = ?
+        """;
+
+            try (PreparedStatement ps = conn.prepareStatement(updateOrderSql)) {
+                ps.setInt(1, saleId);
+                ps.setInt(2, order.getId());
+                ps.executeUpdate();
+            }
+
+            conn.commit();
+
+            // 3️⃣ Créer l’objet Sale côté Java
+            Sale sale = new Sale();
+            sale.setId(saleId);
+            sale.setCreationDatetime(now);
+            sale.setOrder(order);
+
+            order.setSale(sale);
+
+            return sale;
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private List<DishOrder> findDishOrderByIdOrder(Integer idOrder) {
         DBConnection dbConnection = new DBConnection();
         Connection connection = dbConnection.getConnection();
